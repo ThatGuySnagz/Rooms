@@ -4,8 +4,23 @@ room.lastTurnDirection = nil
 room.random = Random.new()
 
 function room.GetRandom(prevRoom)
-    local possibleRooms = workspace.Rooms:GetChildren()
-    local randomRoom = possibleRooms[room.random:NextInteger(1, #possibleRooms)]
+    local totalWeight = 0
+    for i, info in pairs(room.info) do
+        totalWeight += info.Weight
+    end
+
+    local randomWeight = room.random:NextInteger(1, totalWeight)
+    local currentWeight = 0
+    local randomRoom = nil
+    for i, info in pairs(room.info) do
+        currentWeight += info.Weight
+        if randomWeight <= currentWeight then
+            randomRoom = workspace.Rooms[i]
+            break
+        end
+    end
+
+
 
     -- [Rules]
     -- [1] next room must be different from previous
